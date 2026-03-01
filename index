@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TechBiz Summit — Panel de Operaciones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:       #050a12;
+      --surface:  #0d1623;
+      --card:     #111e30;
+      --border:   #1c3050;
+      --accent1:  #00e5ff;
+      --accent2:  #7b5ea7;
+      --accent3:  #ff4c6a;
+      --green:    #00ffa3;
+      --yellow:   #ffd166;
+      --text:     #ccdaf5;
+      --muted:    #4a6080;
+      --glow1:    rgba(0,229,255,0.15);
+      --glow2:    rgba(123,94,167,0.15);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── GRID BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    /* ── GLOW BLOBS ── */
+    .blob {
+      position: fixed; border-radius: 50%;
+      filter: blur(120px); pointer-events: none; z-index: 0;
+    }
+    .blob-1 { width: 600px; height: 600px; background: rgba(0,229,255,0.06); top: -200px; left: -200px; }
+    .blob-2 { width: 500px; height: 500px; background: rgba(123,94,167,0.07); bottom: -150px; right: -150px; }
+
+    /* ── WRAPPER ── */
+    .wrapper { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 20px 80px; }
+
+    /* ── HEADER ── */
+    header {
+      padding: 48px 0 40px;
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .12em;
+      color: var(--accent1); text-transform: uppercase;
+      background: rgba(0,229,255,0.07); border: 1px solid rgba(0,229,255,0.2);
+      padding: 6px 14px; border-radius: 100px;
+      animation: fadeUp .6s ease both;
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent1); animation: pulse 2s infinite; }
+
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.8)} }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(26px, 5vw, 48px);
+      font-weight: 900; line-height: 1.1;
+      letter-spacing: -.01em;
+      background: linear-gradient(135deg, #fff 0%, var(--accent1) 60%, var(--accent2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      animation: fadeUp .7s .1s ease both;
+    }
+    .subtitle {
+      font-size: 14px; color: var(--muted); letter-spacing: .03em;
+      animation: fadeUp .7s .2s ease both;
+    }
+
+    /* ── DATE BAR ── */
+    .date-bar {
+      display: flex; align-items: center; justify-content: center; gap: 20px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 24px; font-size: 13px;
+      font-family: 'JetBrains Mono', monospace; color: var(--muted);
+      margin-bottom: 40px;
+      animation: fadeUp .7s .3s ease both;
+    }
+    .date-bar span { color: var(--text); }
+    .sep { width: 1px; height: 16px; background: var(--border); }
+    #clock { color: var(--accent1); }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+      margin-bottom: 16px; padding-left: 4px;
+      animation: fadeUp .7s .4s ease both;
+    }
+
+    /* ── MAIN CARDS ── */
+    .main-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      margin-bottom: 16px;
+      animation: fadeUp .7s .5s ease both;
+    }
+
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px 24px;
+      cursor: pointer; position: relative; overflow: hidden;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+      display: flex; flex-direction: column; gap: 14px;
+      text-decoration: none; color: inherit;
+    }
+    .card::before {
+      content: ''; position: absolute; inset: 0;
+      opacity: 0; transition: opacity .3s;
+    }
+    .card:hover { transform: translateY(-4px); }
+    .card:active { transform: translateY(-1px); }
+
+    /* Ingresos */
+    .card-income { border-color: rgba(0,255,163,0.25); }
+    .card-income::before { background: radial-gradient(ellipse at top left, rgba(0,255,163,0.08), transparent 70%); }
+    .card-income:hover { border-color: rgba(0,255,163,0.5); box-shadow: 0 8px 40px rgba(0,255,163,0.12); }
+    .card-income:hover::before { opacity: 1; }
+
+    /* Gastos */
+    .card-expense { border-color: rgba(255,76,106,0.25); }
+    .card-expense::before { background: radial-gradient(ellipse at top left, rgba(255,76,106,0.08), transparent 70%); }
+    .card-expense:hover { border-color: rgba(255,76,106,0.5); box-shadow: 0 8px 40px rgba(255,76,106,0.12); }
+    .card-expense:hover::before { opacity: 1; }
+
+    .card-icon {
+      width: 52px; height: 52px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 24px;
+    }
+    .card-income .card-icon { background: rgba(0,255,163,0.12); }
+    .card-expense .card-icon { background: rgba(255,76,106,0.12); }
+
+    .card-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 17px; font-weight: 600; letter-spacing: -.01em;
+    }
+    .card-income .card-title { color: var(--green); }
+    .card-expense .card-title { color: var(--accent3); }
+
+    .card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    .card-arrow {
+      position: absolute; top: 24px; right: 24px;
+      font-size: 20px; color: var(--muted);
+      transition: transform .2s, color .2s;
+    }
+    .card:hover .card-arrow { transform: translate(3px,-3px); }
+    .card-income:hover .card-arrow { color: var(--green); }
+    .card-expense:hover .card-arrow { color: var(--accent3); }
+
+    /* ── SECONDARY GRID ── */
+    .secondary-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      margin-bottom: 16px;
+      animation: fadeUp .7s .6s ease both;
+    }
+
+    .mini-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 20px 18px;
+      cursor: pointer; position: relative;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .mini-card:hover { transform: translateY(-3px); border-color: rgba(0,229,255,0.3); box-shadow: 0 6px 30px rgba(0,229,255,0.08); }
+
+    .mini-icon { font-size: 22px; }
+    .mini-title { font-family: 'Orbitron', sans-serif; font-size: 12px; font-weight: 600; color: var(--text); }
+    .mini-label { font-size: 11px; color: var(--muted); }
+
+    /* ── LIVE BAR ── */
+    .live-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(135deg, #0d1e35 0%, #111a2e 100%);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: 16px; padding: 18px 24px;
+      animation: fadeUp .7s .7s ease both;
+      cursor: pointer; transition: box-shadow .2s;
+    }
+    .live-bar:hover { box-shadow: 0 0 30px rgba(0,229,255,0.1); }
+
+    .live-info { display: flex; flex-direction: column; gap: 4px; }
+    .live-title { font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 600; color: var(--accent1); }
+    .live-sub { font-size: 12px; color: var(--muted); }
+
+    .live-pill {
+      display: flex; align-items: center; gap: 7px;
+      background: rgba(0,255,163,0.1); border: 1px solid rgba(0,255,163,0.25);
+      padding: 6px 14px; border-radius: 100px;
+      font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--green);
+    }
+    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 1.5s infinite; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(5,10,18,0.85); backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      width: 90%; max-width: 720px; height: 88vh;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 24px; overflow: hidden;
+      display: flex; flex-direction: column;
+      transform: translateY(24px) scale(.97); transition: transform .35s ease;
+      box-shadow: 0 40px 120px rgba(0,0,0,.6);
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+
+    .modal-header {
+      padding: 20px 24px; display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border); flex-shrink: 0;
+    }
+    .modal-title-wrap { display: flex; align-items: center; gap: 12px; }
+    .modal-icon { font-size: 22px; }
+    .modal-title { font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: 600; }
+    .modal-title.income { color: var(--green); }
+    .modal-title.expense { color: var(--accent3); }
+
+    .modal-close {
+      width: 36px; height: 36px; border-radius: 10px;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+      color: var(--muted); font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s, color .2s;
+    }
+    .modal-close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+
+    .modal iframe {
+      flex: 1; width: 100%; border: none;
+      background: white;
+    }
+
+    .modal-loading {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 16px;
+      font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted);
+    }
+    .spinner {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent1);
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .secondary-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <div class="wrapper">
+    <header>
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Tecnologías de Negocios · Evento Estudiantil
+      </div>
+      <h1>Panel de Operaciones</h1>
+      <p class="subtitle">Sistema de registro de flujo financiero en tiempo real</p>
+    </header>
+
+    <div class="date-bar">
+      📅 <span id="date-display"></span>
+      <div class="sep"></div>
+      🕐 <span id="clock"></span>
+    </div>
+
+    <p class="section-label">// módulos principales</p>
+
+    <div class="main-grid">
+      <div class="card card-income" onclick="openModal('income')">
+        <div class="card-arrow">↗</div>
+        <div class="card-icon">💰</div>
+        <div>
+          <div class="card-title">Registrar Ingreso</div>
+          <div class="card-desc">Captura ventas, cobros y entradas de dinero del evento. Cada registro queda vinculado al control general.</div>
+        </div>
+      </div>
+
+      <div class="card card-expense" onclick="openModal('expense')">
+        <div class="card-arrow">↗</div>
+        <div class="card-icon">📤</div>
+        <div>
+          <div class="card-title">Registrar Gasto</div>
+          <div class="card-desc">Documenta compras, pagos y salidas de efectivo. Mantén el presupuesto del evento bajo control.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="section-label" style="animation-delay:.55s">// accesos rápidos</p>
+
+    <div class="secondary-grid">
+      <div class="mini-card">
+        <div class="mini-icon">📋</div>
+        <div class="mini-title">Tomar Orden</div>
+        <div class="mini-label">Próximamente</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-icon">💳</div>
+        <div class="mini-title">Finalizar Cobro</div>
+        <div class="mini-label">Próximamente</div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-icon">📊</div>
+        <div class="mini-title">Control General</div>
+        <div class="mini-label">Google Sheets</div>
+      </div>
+    </div>
+
+    <div class="live-bar" onclick="openModal('income')">
+      <div class="live-info">
+        <div class="live-title">Pizarra del Evento</div>
+        <div class="live-sub">Monitoreo en tiempo real · Todas las transacciones</div>
+      </div>
+      <div class="live-pill">
+        <span class="live-dot"></span>
+        EN VIVO
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-icon" id="modal-icon"></span>
+          <span class="modal-title" id="modal-title"></span>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+
+      <div class="modal-loading" id="modal-loading">
+        <div class="spinner"></div>
+        <span>Cargando formulario...</span>
+      </div>
+
+      <iframe
+        id="tally-frame"
+        src=""
+        allowfullscreen
+        allow="autoplay; camera; microphone; geolocation"
+        style="display:none"
+        onload="frameLoaded()"
+      ></iframe>
+    </div>
+  </div>
+
+  <script>
+    const FORMS = {
+      income:  { url: 'https://tally.so/embed/J92eKK?alignLeft=1&hideTitle=0&transparentBackground=0&dynamicHeight=1', icon: '💰', label: 'Registrar Ingreso', cls: 'income' },
+      expense: { url: 'https://tally.so/embed/kdYKDo?alignLeft=1&hideTitle=0&transparentBackground=0&dynamicHeight=1', icon: '📤', label: 'Registrar Gasto',   cls: 'expense' },
+    };
+
+    function openModal(type) {
+      const cfg = FORMS[type];
+      document.getElementById('modal-icon').textContent  = cfg.icon;
+      const titleEl = document.getElementById('modal-title');
+      titleEl.textContent = cfg.label;
+      titleEl.className = 'modal-title ' + cfg.cls;
+
+      const frame = document.getElementById('tally-frame');
+      frame.style.display = 'none';
+      document.getElementById('modal-loading').style.display = 'flex';
+      frame.src = cfg.url;
+
+      document.getElementById('modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function frameLoaded() {
+      document.getElementById('tally-frame').style.display = 'block';
+      document.getElementById('modal-loading').style.display = 'none';
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+      setTimeout(() => { document.getElementById('tally-frame').src = ''; }, 300);
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('modal-overlay')) closeModal();
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // CLOCK
+    function updateClock() {
+      const now = new Date();
+      const days = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+      const months = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+      document.getElementById('date-display').textContent = `${days[now.getDay()]}, ${now.getDate()} de ${months[now.getMonth()]}`;
+      document.getElementById('clock').textContent = now.toLocaleTimeString('es-CR');
+    }
+    updateClock(); setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
