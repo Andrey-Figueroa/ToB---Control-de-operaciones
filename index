@@ -9,19 +9,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;900&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg:       #050a12;
-      --surface:  #0d1623;
-      --card:     #111e30;
-      --border:   #1c3050;
-      --accent1:  #00e5ff;
-      --accent2:  #7b5ea7;
+      --bg:       #030d18;
+      --surface:  #071525;
+      --card:     #0a1e33;
+      --border:   #0e3358;
+      --accent1:  #00cfff;
+      --accent2:  #0090d4;
       --accent3:  #ff4c6a;
-      --green:    #00ffa3;
-      --yellow:   #ffd166;
-      --text:     #ccdaf5;
-      --muted:    #4a6080;
-      --glow1:    rgba(0,229,255,0.15);
-      --glow2:    rgba(123,94,167,0.15);
+      --green:    #00e8ff;
+      --yellow:   #63d4f5;
+      --text:     #b8dff7;
+      --muted:    #3a6080;
+      --glow1:    rgba(0,207,255,0.18);
+      --glow2:    rgba(0,144,212,0.15);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -50,8 +50,8 @@
       position: fixed; border-radius: 50%;
       filter: blur(120px); pointer-events: none; z-index: 0;
     }
-    .blob-1 { width: 600px; height: 600px; background: rgba(0,229,255,0.06); top: -200px; left: -200px; }
-    .blob-2 { width: 500px; height: 500px; background: rgba(123,94,167,0.07); bottom: -150px; right: -150px; }
+    .blob-1 { width: 600px; height: 600px; background: rgba(0,207,255,0.07); top: -200px; left: -200px; }
+    .blob-2 { width: 500px; height: 500px; background: rgba(0,144,212,0.07); bottom: -150px; right: -150px; }
 
     /* ── WRAPPER ── */
     .wrapper { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 20px 80px; }
@@ -133,41 +133,31 @@
     .card:active { transform: translateY(-1px); }
 
     /* Ingresos */
-    .card-income { border-color: rgba(0,255,163,0.25); }
-    .card-income::before { background: radial-gradient(ellipse at top left, rgba(0,255,163,0.08), transparent 70%); }
-    .card-income:hover { border-color: rgba(0,255,163,0.5); box-shadow: 0 8px 40px rgba(0,255,163,0.12); }
+    .card-income { border-color: rgba(0,207,255,0.25); }
+    .card-income::before { background: radial-gradient(ellipse at top left, rgba(0,207,255,0.08), transparent 70%); }
+    .card-income:hover { border-color: rgba(0,207,255,0.5); box-shadow: 0 8px 40px rgba(0,207,255,0.12); }
     .card-income:hover::before { opacity: 1; }
+    .card-income .card-icon { background: rgba(0,207,255,0.12); }
+    .card-income .card-title { color: var(--accent1); }
+    .card-income:hover .card-arrow { color: var(--accent1); }
 
     /* Gastos */
     .card-expense { border-color: rgba(255,76,106,0.25); }
     .card-expense::before { background: radial-gradient(ellipse at top left, rgba(255,76,106,0.08), transparent 70%); }
     .card-expense:hover { border-color: rgba(255,76,106,0.5); box-shadow: 0 8px 40px rgba(255,76,106,0.12); }
     .card-expense:hover::before { opacity: 1; }
+    .card-expense .card-icon { background: rgba(255,76,106,0.12); }
+    .card-expense .card-title { color: var(--accent3); }
+    .card-expense:hover .card-arrow { color: var(--accent3); }
 
     .card-icon {
       width: 52px; height: 52px; border-radius: 14px;
       display: flex; align-items: center; justify-content: center; font-size: 24px;
     }
-    .card-income .card-icon { background: rgba(0,255,163,0.12); }
-    .card-expense .card-icon { background: rgba(255,76,106,0.12); }
-
-    .card-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 17px; font-weight: 600; letter-spacing: -.01em;
-    }
-    .card-income .card-title { color: var(--green); }
-    .card-expense .card-title { color: var(--accent3); }
-
+    .card-title { font-family: 'Orbitron', sans-serif; font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
     .card-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
-
-    .card-arrow {
-      position: absolute; top: 24px; right: 24px;
-      font-size: 20px; color: var(--muted);
-      transition: transform .2s, color .2s;
-    }
+    .card-arrow { position: absolute; top: 24px; right: 24px; font-size: 20px; color: var(--muted); transition: transform .2s, color .2s; }
     .card:hover .card-arrow { transform: translate(3px,-3px); }
-    .card-income:hover .card-arrow { color: var(--green); }
-    .card-expense:hover .card-arrow { color: var(--accent3); }
 
     /* ── SECONDARY GRID ── */
     .secondary-grid {
@@ -320,12 +310,7 @@
 
     <p class="section-label" style="animation-delay:.55s">// accesos rápidos</p>
 
-    <div class="secondary-grid">
-      <div class="mini-card">
-        <div class="mini-icon">📋</div>
-        <div class="mini-title">Tomar Orden</div>
-        <div class="mini-label">Próximamente</div>
-      </div>
+    <div class="secondary-grid" style="grid-template-columns:1fr 1fr">
       <div class="mini-card">
         <div class="mini-icon">💳</div>
         <div class="mini-title">Finalizar Cobro</div>
@@ -335,17 +320,6 @@
         <div class="mini-icon">📊</div>
         <div class="mini-title">Control General</div>
         <div class="mini-label">Google Sheets</div>
-      </div>
-    </div>
-
-    <div class="live-bar" onclick="openModal('income')">
-      <div class="live-info">
-        <div class="live-title">Pizarra del Evento</div>
-        <div class="live-sub">Monitoreo en tiempo real · Todas las transacciones</div>
-      </div>
-      <div class="live-pill">
-        <span class="live-dot"></span>
-        EN VIVO
       </div>
     </div>
   </div>
